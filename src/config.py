@@ -1,6 +1,7 @@
 from pydantic import BaseSettings
 import datetime as dt
 import pathlib
+import os
 
 
 class BaseEnv(BaseSettings):
@@ -28,6 +29,8 @@ class PostgresEnv(BaseEnv):
 # sudo < /dev/random tr -dc A-Za-z0-9 | head -c 32; echo
 
 postgres_env = PostgresEnv()
+POSTGRES_DSN = os.environ.get('DATABASE_URL')
+
 
 AUTHENTICATION_CODE_LEN = 64
 AUTHENTICATION_CODE_LIFETIME = dt.timedelta(minutes=5)
