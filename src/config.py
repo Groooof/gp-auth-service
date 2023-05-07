@@ -30,7 +30,7 @@ class PostgresEnv(BaseEnv):
 
 postgres_env = PostgresEnv()
 POSTGRES_DSN = os.environ.get('DATABASE_URL')
-
+REDIS_DSN = os.environ.get('REDIS_URL')
 
 AUTHENTICATION_CODE_LEN = 64
 AUTHENTICATION_CODE_LIFETIME = dt.timedelta(minutes=5)
