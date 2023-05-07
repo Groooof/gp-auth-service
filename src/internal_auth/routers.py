@@ -42,7 +42,7 @@ async def login(response: Response,
     response.set_cookie(config.USER_SESSION_COOKIE_NAME, 
                         session,
                         max_age=int(config.USER_SESSION_LIFETIME.total_seconds()),
-                        # secure=True,
+                        secure=True,
                         httponly=True)
     response.headers['Cache-Control'] = 'no-store'
     response.headers['Pragma'] = 'no-cache'
