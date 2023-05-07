@@ -1,12 +1,12 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT NOT NULL UNIQUE,
     hashed_password TEXT NOT NULL
 );
 
-CREATE TABLE apps (
+CREATE TABLE IF NOT EXISTS apps (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     secret TEXT NOT NULL,
     host TEXT NOT NULL,
@@ -16,7 +16,7 @@ CREATE TABLE apps (
     FOREIGN KEY (owner_id) REFERENCES users (id)
 );
 
-CREATE TABLE apps_users (
+CREATE TABLE IF NOT EXISTS apps_users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     username TEXT NOT NULL UNIQUE,
     encrypted_password BYTEA NOT NULL,

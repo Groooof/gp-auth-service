@@ -28,6 +28,11 @@ async def on_startup() -> None:
                                                        postgres_env.PORT, 
                                                        postgres_env.DB)
     await database.startup(dsn)
+    
+    async with database.connection() as con:
+         with open('init.sql') as f:
+            con.execute(f.read())
+            
     print('App is running!')
 
 
