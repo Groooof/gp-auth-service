@@ -33,7 +33,7 @@ async def on_startup() -> None:
     
     async with asynccontextmanager(database.connection)() as con:
         with open('init.sql') as f:
-            con.execute(f.read())
+            await con.execute(f.read())
             
     print('App is running!')
 
