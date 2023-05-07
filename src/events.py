@@ -2,6 +2,8 @@ from src.database import database
 from src.config import postgres_env, POSTGRES_DSN
 from src import redis
 
+from contextlib import asynccontextmanager
+
 
 def get_postgres_dsn(user: str, password: str, host: str, port: str, db: str,
                      sa_driver: str = None, sa_dialect: str = None):
@@ -29,7 +31,7 @@ async def on_startup() -> None:
                                                        postgres_env.DB)
     await database.startup(dsn)
     
-    async with database.connection as con:
+    async with asynccontextmanager(database.connection)() as con:
         with open('init.sql') as f:
             con.execute(f.read())
             
