@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block title %}Вход{% endblock %}
+{% block body %}
+<div class="container h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="d-flex flex-column col-5 p-0 align-items-center">
+
+            <div class="form-floating mb-4 w-75">
+                <input type="text" class="form-control my-input-1" id="username-input" placeholder="Имя пользователя" name="username" autocomplete="off" required>
+                <label for="username-input">Имя пользователя</label>
+            </div>
+
+            <div class="splitter w-75 mb-4">
+                <img src="/static/icons/lock-1.svg">
+            </div>
+
+            <table class="gp-img-grid w-75" id="step-1">
+                <tbody>
+                    {% for row in step_1_data %}
+                        <tr>
+                            {% for item in row %}
+                                <td class="gp-img-grid-cell">
+                                    <div class="gp-img-grid-cell-content">{{ item }}</div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="gp-img-grid w-75" id="step-2">
+                <tbody>
+                    {% for row in step_2_data %}
+                        <tr>
+                            {% for item in row %}
+                                <td class="gp-img-grid-cell">
+                                    <div class="gp-img-grid-cell-content">{{ item }}</div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <table class="gp-img-grid w-75" id="step-3">
+                <tbody>
+                    {% for row in step_3_data %}
+                        <tr>
+                            {% for item in row %}
+                                <td class="gp-img-grid-cell">
+                                    <div class="gp-img-grid-cell-content">{{ item }}</div>
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <input id="auth-url" type="hidden" value="/authorize?{{ request.query_params }}">
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+    async function authenticate() {
+        const username = document.querySelector('#username-input').value;
+        const step1GridArray = tableTo2dArray(step1Grid);
+        const step2GridArray = tableTo2dArray(step2Grid);
+        const step3GridArray = tableTo2dArray(step3Grid);
+        
+        let response = await api.authenticate(username,
+                                                step2Selection,
+                                                step3Selection,
+                                                step1GridArray,
+                                                step2GridArray,
+                                                step3GridArray,
+                                                authUrl);
+        
+        if (!response.ok) {
+            window.location.reload();
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        };
+        console.log('Response: ', response);
+        
+        clientCallbackUrl = (await response.json())['redirect_to'];
+        response = await fetch(clientCallbackUrl , {credentials: 'include'});
+        if (response.redirected) {
+            window.location.href = response.url;
+        };
+        clientPageUrl = (await response.json())['redirect_to'];
+        window.location.href = clientPageUrl;
+
+    };
+
+    const api = new Api();
+
+    let currentStep = 1;
+    let step2Selection = '';
+    let step3Selection = '';
+
+    const step1Grid = document.querySelector('#step-1');
+    const step2Grid = document.querySelector('#step-2');
+    const step3Grid = document.querySelector('#step-3');
+    const gridCells = document.querySelectorAll('.gp-img-grid-cell');
+    const authUrl = document.getElementById('auth-url').value;
+
+    step2Grid.style.display = 'none';
+    step3Grid.style.display = 'none';
+
+    gridCells.forEach(gridCell => {
+        gridCell.addEventListener('click', async event => {
+            const showHideDuration = 200;
+            switch(currentStep) {
+                case 1:
+                    hideElement(step1Grid, showHideDuration);
+                    showElement(step2Grid, showHideDuration, showHideDuration, 'table');
+                    currentStep = 2;
+                    break;
+                case 2:
+                    step2Selection = event.target.textContent;
+                    hideElement(step2Grid, showHideDuration);
+                    showElement(step3Grid, showHideDuration, showHideDuration, 'table');
+                    currentStep = 3;
+                    break;
+                case 3:
+                    step3Selection = event.target.textContent;
+                    await authenticate();
+                    break;
+            };
+        });
+    });
+
+</script>
+{% endblock %}

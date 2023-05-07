@@ -1,0 +1,140 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Вход</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <link href="/static/css/base.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-custom.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container h-100">
+    <div class="row h-100 align-items-center justify-content-center">
+        <div class="col-4 p-0"></div>
+        <div class="col-4 p-0">
+
+            <form class="login-form">
+                <div class="mb-4 w-75 mx-auto text-center">
+                    <h1>Вход</h1>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="text" class="form-control my-input-1" id="login-name-input" placeholder="Имя пользователя" name="username" autocomplete="off" required>
+                    <label for="login-name-input">Имя пользователя</label>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="password" class="form-control my-input-1" id="login-pass-input" placeholder="Пароль" name="password" autocomplete="off" required>
+                    <label for="login-pass-input">Пароль</label>
+                </div>
+
+                <div class="mb-2 w-75 mx-auto">
+                    <button type="submit" class="btn my-btn-1 w-100">Войти</button>
+                </div>
+
+                <div class="w-75 mx-auto form-switcher text-end">
+                    Нет аккаунта? <span class="text-decoration-underline">Регистрация</span>
+                </div>
+            </form>
+        
+        </div>
+        <div class="col-4 p-0">
+
+            <form class="registration-form">
+                <div class="mb-4 w-75 mx-auto text-center">
+                    <h1>Регистрация</h1>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="text" class="form-control my-input-1" id="reg-username-input" placeholder="Имя пользователя" autocomplete="username" data-lpignore="true" required>
+                    <label for="reg-username-input">Имя пользователя</label>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="password" class="form-control my-input-1" id="reg-pass-input" placeholder="Пароль" autocomplete="off" required>
+                    <label for="reg-pass-input">Пароль</label>
+                </div>
+
+                <div class="mb-2 w-75 mx-auto">
+                    <button type="submit" class="btn my-btn-1 w-100">Зарегистрироваться</button>
+                </div>
+
+                <div class="w-75 mx-auto form-switcher text-end">
+                    Уже есть аккаунт? <span class="text-decoration-underline">Войти</span>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    const loginForm = document.querySelector('.login-form');
+    const registrationForm = document.querySelector('.registration-form');
+    const formSwitchers = document.querySelectorAll('.form-switcher > span');
+    const api = new Api();
+
+    function switchForm () {
+        if (registrationForm.style.opacity === '1') {
+            registrationForm.style.opacity = '0';
+            registrationForm.style.transform = 'translateX(0%)';
+            loginForm.style.opacity = '1';
+            loginForm.style.transform = 'translateX(0%)'
+        } else {
+            registrationForm.style.opacity = '1';
+            registrationForm.style.transform = 'translateX(-100%)';
+            loginForm.style.opacity = '0';
+            loginForm.style.transform = 'translateX(-100%)'
+        }
+    };
+
+    formSwitchers.forEach(formSwitcher => {
+        formSwitcher.addEventListener('click', event => switchForm());
+    });
+
+    registrationForm.addEventListener("submit", async function( event ) {
+        event.preventDefault();
+        const form = event.target
+        const username = form[0].value
+        const password = form[1].value
+
+        let response;
+
+        response = await api.register(username, password);
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+
+        response = await api.login(username, password);
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.replace('/admin');
+    });
+
+    loginForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const form = event.target
+        const username = form[0].value
+        const password = form[1].value
+
+        const response = await api.login(username, password);
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.replace('/admin');
+    });
+
+</script>
+
+</body>
+</html>

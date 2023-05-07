@@ -1,0 +1,340 @@
+{% extends "base.html" %}
+{% block title %}Администрирование{% endblock %}
+{% block body %}
+<div id="root-container">
+    <header class="fixed-top shadow">
+        <div class="container">
+            <div class="d-flex align-items-center disabled header-item inactive">ADMIN</div>
+            <div class="d-flex align-items-center header-item inactive mx-4 p-0 border border-white border-opacity-50"></div>
+            <div class="d-flex align-items-center me-auto header-item">Подключенные сервисы</div>
+            <div class="d-flex align-items-center header-item" id="logout-btn">Выход</div>
+        </div>
+    </header>
+
+<div class="container p-0">
+
+    <div id="apps-container">
+        <div class="scroll-indicator left-scroll-indicator">
+            <div class="circle shadow"><div class="arrow arrow-left"></div></div>
+        </div>
+        <div class="apps-scroll">
+            <div class="app-container app-container-empty" data-bs-toggle="modal" data-bs-target="#add-app-modal">
+                +
+            </div>
+
+            {% for app in apps %}
+                <div class="app-container justify-content-between p-5" id="{{ app.client_id }}">
+                    <div class="d-flex flex-column w-100">
+                        <input type="text" readonly class="form-control-plaintext h1 mb-4" value="{{ app.name }}">
+
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control my-input-1" id="client-id-input" placeholder="Client ID" value="{{ app.client_id }}" readonly>
+                                <label for="client-id-input">Client ID</label>
+                            </div>
+                            <span class="input-group-text bi bi-eye-slash"></span>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control my-input-1" id="client-secret-input" placeholder="Client Secret" value="{{ app.client_secret }}" readonly>
+                                <label for="client-secret-input">Client Secret</label>
+                            </div>
+                            <span class="input-group-text bi bi-eye-slash"></span>
+                        </div>
+
+                        <div class="form-floating mb-5 w-100">
+                            <input type="text" class="form-control my-input-1" id="host-input" placeholder="Host" value="{{ app.host }}" readonly>
+                            <label for="host-input">Host</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3 w-100">
+                            <select class="form-select my-input-1" id="users-select">
+                                <option value="" disabled selected>Выберите пользователя</option>
+                                {% for user in app.users %}
+                                    <option value="{{ user }}">{{ user }}</option>
+                                {% endfor %}
+                            </select>
+                            <label for="users-select">Пользователи ({{ app.users|length }})</label>
+                        </div>
+
+                        <div class="d-flex gap-4">
+                            <div class="w-50" id="del-app-user-btn">
+                                <button type="button" class="btn my-btn-1 bg-danger w-100">Удалить</button>
+                            </div>
+                            <div class="w-50">
+                                <button type="button" class="btn my-btn-1 w-100" data-bs-toggle="modal" data-bs-target="#add-user-modal" data-bs-client-id="{{ app.client_id }}">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="w-100 align-self-end" id="del-app-btn">
+                        <button type="button" class="btn my-btn-1 w-100 bg-danger">Отключить</button>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="scroll-indicator right-scroll-indicator">
+            <div class="circle shadow">
+                <div class="arrow arrow-right"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<!-- Модальное окно для добавления приложения -->
+<div class="modal fade" id="add-app-modal" tabindex="-1" aria-labelledby="add-app-modal-label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="add-app-modal-label">Добавление приложения</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+    </div>
+
+    <div class="modal-body d-flex flex-column align-items-center">
+        <div class="form-floating my-3 w-75">
+            <input type="text" class="form-control my-input-1" id="app-name-modal-input" placeholder="Наименование" name="name" autocomplete="off" required>
+            <label for="app-name-modal-input">Наименование</label>
+        </div>
+        <div class="form-floating mb-3 w-75">
+            <input type="text" class="form-control my-input-1" id="app-host-modal-input" placeholder="Host" name="host" autocomplete="off" required>
+            <label for="app-host-modal-input">Host</label>
+        </div>
+        <div class="w-75 mb-3" id="add-app-modal-btn">
+            <button type="button" class="btn my-btn-1 w-100">Добавить</button>
+        </div>
+    </div>
+
+    </div>
+</div>
+</div>
+
+<!-- Модальное окно для добавления пользователя -->
+<div class="modal fade" id="add-user-modal" tabindex="-1" aria-labelledby="add-user-modal-label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+
+    <div class="modal-header">
+        <h5 class="modal-title" id="add-user-modal-label">Добавление пользователя</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+    </div>
+
+    <div class="modal-body d-flex flex-column align-items-center">
+        <div class="form-floating my-4 w-75">
+            <input type="text" class="form-control my-input-1" id="username-modal-input" placeholder="Имя пользователя" name="username" autocomplete="off" required>
+            <label for="username-modal-input">Имя пользователя</label>
+        </div>
+
+        <div class="splitter w-75 mb-4">
+            <img src="/static/icons/lock-1.svg">
+        </div>
+        
+        <table class="gp-img-grid w-75 mb-4">
+            <tbody>
+                {% for row in gp_data %}
+                    <tr>
+                        {% for item in row %}
+                            <td class="gp-img-grid-cell">
+                                <div class="gp-img-grid-cell-content">{{ item }}</div>
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="input-group mb-3 w-75">
+            <div class="form-floating">
+                <input type="password" class="form-control my-input-1" id="pass-modal-input" required readonly>
+                <label for="pass-modal-input">Пароль</label>
+            </div>
+            <span class="input-group-text bi bi-eye-slash"></span>
+        </div>
+
+        <div class="w-75 mb-4" id="create-app-user-modal-btn">
+            <button type="button" class="btn my-btn-1 w-100">Добавить</button>
+        </div>
+        <input type="hidden" id="client-id-modal-input">
+    </div>
+
+    </div>
+</div>
+</div>
+
+<script>
+
+    function setAppsScrollIndicators () {
+        const scrollLeft = appsScroll.scrollLeft;
+        const scrollRight = appsScroll.scrollWidth - appsScroll.clientWidth - scrollLeft;
+
+        if (scrollLeft == 0 && leftScrollIndicator.style.display != 'none') {
+            hideElement(leftScrollIndicator, 500, 0);
+        } else 
+        if (scrollLeft != 0 && leftScrollIndicator.style.display == 'none') {
+            showElement(leftScrollIndicator, 500, 0, 'flex');
+        }
+
+        if (scrollRight == 0 && rightScrollIndicator.style.display != 'none') {
+            hideElement(rightScrollIndicator, 500, 0);
+        } else
+        if (scrollRight != 0 && rightScrollIndicator.style.display == 'none') {
+            showElement(rightScrollIndicator, 500, 0, 'flex');
+        }
+    };
+
+    function scrollAppsLeft () {
+        scrollLeft(appsScroll, appContainerWidth * 0.8);
+    };
+
+    function scrollAppsRight () {
+        scrollRight(appsScroll, appContainerWidth * 0.8);
+    };
+
+    async function createApp() {
+        const name = document.querySelector('#app-name-modal-input').value;
+        const host = document.querySelector('#app-host-modal-input').value;
+
+        const response = await api.addApp(name, host);
+
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.reload();
+    };
+
+    async function delApp(appId) {
+        const response = await api.delApp(appId);
+
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.reload();
+    };
+
+    async function createAppUser() {
+        username = createAppUserModal.querySelector('#username-modal-input').value;
+        password = createAppUserModal.querySelector('#pass-modal-input').value;
+        appId = createAppUserModal.querySelector('#client-id-modal-input').value;
+
+        const response = await api.createAppUser(appId, username, password);
+
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.reload();
+    };
+
+    async function delAppUser(appId) {
+        const app = document.getElementById(appId);
+        const usersSelect = app.querySelector('#users-select');
+        const selectedOption = usersSelect.selectedOptions[0];
+        
+        if (selectedOption.disabled) {
+            return;
+        };
+        
+        const selectedUsername = selectedOption.value;
+        const response = await api.delAppUser(appId, selectedUsername);
+
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        };
+        window.location.reload();
+    };
+
+    const api = new Api();
+
+    const appContainerWidth = document.querySelector('.app-container').clientWidth;
+
+    const appsScroll = document.querySelector('.apps-scroll');
+    appsScroll.addEventListener('scroll', setAppsScrollIndicators);
+
+    const leftScrollIndicator = document.querySelector('.left-scroll-indicator');
+    leftScrollIndicator.addEventListener('click', scrollAppsLeft);
+    leftScrollIndicator.style.display = 'none';
+
+    const rightScrollIndicator = document.querySelector('.right-scroll-indicator');
+    rightScrollIndicator.addEventListener('click', scrollAppsRight);
+    rightScrollIndicator.style.display = 'none';
+    
+    setAppsScrollIndicators();
+    
+    const createAppUserModal = document.querySelector('#add-user-modal');
+    const passModalInput = createAppUserModal.querySelector('#pass-modal-input');
+    passModalInput.count = 0
+    const gpItems = createAppUserModal.querySelectorAll('.gp-img-grid-cell-content');
+
+    const createAppUserModalBtn = createAppUserModal.querySelector('#create-app-user-modal-btn');
+    createAppUserModalBtn.addEventListener('click', async () => createAppUser());
+
+    gpItems.forEach(item => {
+        item.addEventListener('click', event => {
+            console.log(passModalInput.count);
+            if (passModalInput.count < 2) {
+                passModalInput.value += event.target.textContent;
+                passModalInput.count += 1
+            };
+        });
+    });
+
+    const clientIdModalInput = createAppUserModal.querySelector('#client-id-modal-input');
+    createAppUserModal.addEventListener('show.bs.modal', event => {
+        const targetClientId = event.relatedTarget.getAttribute('data-bs-client-id');
+        clientIdModalInput.value = targetClientId;
+    });
+
+    createAppUserModal.addEventListener('hide.bs.modal', event => {
+        passModalInput.count = 0;
+        const modalInputs = createAppUserModal.querySelectorAll('input');
+        modalInputs.forEach(input => {
+            input.value = '';
+        });
+    });
+
+    const inputGroups = document.querySelectorAll('.input-group');
+    inputGroups.forEach(inputGroup => {
+        const showHideTextBtn = inputGroup.querySelector('span.input-group-text.bi');
+        if (!showHideTextBtn) {return;}
+
+        const targetInput = inputGroup.querySelector('input');
+        showHideTextBtn.addEventListener('click', event => {
+            if (targetInput.type == 'text') {
+                targetInput.type = 'password';
+                showHideTextBtn.classList.remove('bi-eye');
+                showHideTextBtn.classList.add('bi-eye-slash');
+            } else {
+                targetInput.type = 'text';
+                showHideTextBtn.classList.remove('bi-eye-slash');
+                showHideTextBtn.classList.add('bi-eye');
+            };
+        });
+    });
+
+    const logoutBtn = document.querySelector('#logout-btn');
+    logoutBtn.addEventListener('click', async event => {
+        await api.logout();
+        window.location.reload();
+    });
+
+    const createAppBtn = document.querySelector('#add-app-modal-btn');
+    createAppBtn.addEventListener('click', async () => createApp(), false);
+
+    const apps = document.querySelectorAll('.app-container:not(.app-container-empty)');
+    apps.forEach(app => {
+        const appId = app.querySelector('#client-id-input').value;
+
+        const delAppBtn = app.querySelector('#del-app-btn');
+        delAppBtn.addEventListener('click', async () => delApp(appId));
+
+        const delAppUserBtn = app.querySelector('#del-app-user-btn');
+        delAppUserBtn.addEventListener('click', async () => delAppUser(appId));
+    });
+
+</script>
+{% endblock %}

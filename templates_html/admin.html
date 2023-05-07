@@ -1,0 +1,293 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Администрирование</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <link href="/static/css/base.css" rel="stylesheet">
+    <link href="/static/css/bootstrap-custom.css" rel="stylesheet">
+    <link href="/static/css/common.css" rel="stylesheet">
+</head>
+<body>
+<div id="root-container">
+    <header class="fixed-top shadow">
+        <div class="container">
+            <div class="d-flex align-items-center disabled header-item inactive">ADMIN</div>
+            <div class="d-flex align-items-center header-item inactive mx-4 p-0 border border-white border-opacity-50"></div>
+            <div class="d-flex align-items-center me-auto header-item">Подключенные сервисы</div>
+            <div class="d-flex align-items-center header-item">Выход</div>
+        </div>
+    </header>
+
+    <div class="container p-0">
+
+        <div id="apps-container">
+            <div class="scroll-indicator left-scroll-indicator">
+                <div class="circle shadow"><div class="arrow arrow-left"></div></div>
+            </div>
+            <div class="apps-scroll">
+                <div class="app-container app-container-empty" data-bs-toggle="modal" data-bs-target="#add-app-modal">
+                    +
+                </div>
+                <div class="app-container app-container-empty" data-bs-toggle="modal" data-bs-target="#add-app-modal">
+                    +
+                </div>
+
+                <div class="app-container justify-content-between p-5">
+                    <div class="d-flex flex-column w-100">
+                        <input type="text" readonly class="form-control-plaintext h1 mb-4" value="Сервис №1">
+
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control my-input-1" id="client-id-input" placeholder="Client ID" value="dfdfdf-fdsf324-f-df-df-dsf" readonly>
+                                <label for="client-id-input">Client ID</label>
+                            </div>
+                            <span class="input-group-text bi bi-eye-slash"></span>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="form-floating">
+                                <input type="password" class="form-control my-input-1" id="client-secret-input" placeholder="Client Secret" value="fhfd7fdhDHkdfjd8" readonly>
+                                <label for="client-secret-input">Client Secret</label>
+                            </div>
+                            <span class="input-group-text bi bi-eye-slash"></span>
+                        </div>
+
+                        <div class="form-floating mb-5 w-100">
+                            <input type="text" class="form-control my-input-1" id="host-input" placeholder="Host" value="test-site.ru" readonly>
+                            <label for="host-input">Host</label>
+                        </div>
+                        
+                        <div class="form-floating mb-3 w-100">
+                            <select class="form-select my-input-1" id="users-select">
+                                <option disabled selected>Выберите пользователя</option>
+                                <option>Один</option>
+                                <option>Два</option>
+                                <option>Три</option>
+                            </select>
+                            <label for="users-select">Пользователи (3)</label>
+                        </div>
+
+                        <div class="d-flex gap-4">
+                            <div class="w-50">
+                                <button type="button" class="btn my-btn-1 bg-danger w-100">Удалить</button>
+                            </div>
+                            <div class="w-50">
+                                <button type="button" class="btn my-btn-1 w-100" data-bs-toggle="modal" data-bs-target="#add-user-modal" data-bs-client-id="dfdfdf-fdsf324-f-df-df-dsf">Добавить</button>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="w-100 align-self-end">
+                        <button type="button" class="btn my-btn-1 w-100 bg-danger">Отключить</button>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="scroll-indicator right-scroll-indicator">
+                <div class="circle shadow">
+                    <div class="arrow arrow-right"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Модальное окно для добавления приложения -->
+<div class="modal fade" id="add-app-modal" tabindex="-1" aria-labelledby="add-app-modal-label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-app-modal-label">Добавление приложения</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+
+        <div class="modal-body d-flex flex-column align-items-center">
+            <div class="form-floating my-3 w-75">
+                <input type="text" class="form-control my-input-1" id="app-name-modal-input" placeholder="Наименование" name="name" autocomplete="off" required>
+                <label for="app-name-modal-input">Наименование</label>
+            </div>
+            <div class="form-floating mb-3 w-75">
+                <input type="text" class="form-control my-input-1" id="app-host-modal-input" placeholder="Host" name="host" autocomplete="off" required>
+                <label for="app-host-modal-input">Host</label>
+            </div>
+            <div class="w-75 mb-3">
+                <button type="button" class="btn my-btn-1 w-100">Добавить</button>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<!-- Модальное окно для добавления пользователя -->
+<div class="modal fade" id="add-user-modal" tabindex="-1" aria-labelledby="add-user-modal-label" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="add-user-modal-label">Добавление пользователя</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+        </div>
+
+        <div class="modal-body d-flex flex-column align-items-center">
+            <div class="form-floating my-4 w-75">
+                <input type="text" class="form-control my-input-1" id="username-modal-input" placeholder="Имя пользователя" name="username" autocomplete="off" required>
+                <label for="username-modal-input">Имя пользователя</label>
+            </div>
+
+            <div class="splitter w-75 mb-4">
+                <img src="/static/icons/lock-1.svg">
+            </div>
+
+            <table class="gp-img-grid w-75 mb-4" id="step-1">
+                <tr>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                    <td class="gp-img-grid-cell">
+                        <div class="gp-img-grid-cell-content">👽</div>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="input-group mb-3 w-75">
+                <div class="form-floating">
+                    <input type="password" class="form-control my-input-1" id="pass-modal-input" required readonly>
+                    <label for="pass-modal-input">Пароль</label>
+                </div>
+                <span class="input-group-text bi bi-eye-slash"></span>
+            </div>
+
+            <div class="w-75 mb-4">
+                <button type="button" class="btn my-btn-1 w-100">Добавить</button>
+            </div>
+            <input type="hidden" id="client-id-modal-input">
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+<script>
+
+    function setAppsScrollIndicators () {
+        const scrollLeft = appsScroll.scrollLeft;
+        const scrollRight = appsScroll.scrollWidth - appsScroll.clientWidth - scrollLeft;
+
+        if (scrollLeft == 0 && leftScrollIndicator.style.display != 'none') {
+            hideElement(leftScrollIndicator, 500, 0);
+        } else 
+        if (scrollLeft != 0 && leftScrollIndicator.style.display == 'none') {
+            showElement(leftScrollIndicator, 500, 0, 'flex');
+        }
+
+        if (scrollRight == 0 && rightScrollIndicator.style.display != 'none') {
+            hideElement(rightScrollIndicator, 500, 0);
+        } else
+        if (scrollRight != 0 && rightScrollIndicator.style.display == 'none') {
+            showElement(rightScrollIndicator, 500, 0, 'flex');
+        }
+    };
+
+    function scrollAppsLeft () {
+        scrollLeft(appsScroll, appContainerWidth * 0.8);
+    };
+
+    function scrollAppsRight () {
+        scrollRight(appsScroll, appContainerWidth * 0.8);
+    };
+
+    const appsScroll = document.querySelector('.apps-scroll');
+    const leftScrollIndicator = document.querySelector('.left-scroll-indicator');
+    const rightScrollIndicator = document.querySelector('.right-scroll-indicator');
+    const appContainerWidth = document.querySelector('.app-container').clientWidth;
+    
+    const addUserModal = document.querySelector('#add-user-modal');
+    const passModalInput = addUserModal.querySelector('#pass-modal-input');
+    const clientIdModalInput = addUserModal.querySelector('#client-id-modal-input');
+    const gpItems = addUserModal.querySelectorAll('.gp-img-grid-cell-content');
+
+    const inputGroups = document.querySelectorAll('.input-group');
+
+    appsScroll.addEventListener('scroll', setAppsScrollIndicators);
+    leftScrollIndicator.addEventListener('click', scrollAppsLeft);
+    rightScrollIndicator.addEventListener('click', scrollAppsRight);
+
+    leftScrollIndicator.style.display = 'none';
+    rightScrollIndicator.style.display = 'none';
+    setAppsScrollIndicators();
+
+    gpItems.forEach(item => {
+        item.addEventListener('click', event => {
+            if (passModalInput.value.length < 4) {
+                passModalInput.value += event.target.textContent;
+            };
+        });
+    });
+
+    addUserModal.addEventListener('show.bs.modal', event => {
+        const targetClientId = event.relatedTarget.getAttribute('data-bs-client-id');
+        clientIdModalInput.value = targetClientId;
+    });
+
+    addUserModal.addEventListener('hide.bs.modal', event => {
+        const modalInputs = addUserModal.querySelectorAll('input');
+        console.log(modalInputs.length);
+        modalInputs.forEach(input => {
+            input.value = '';
+        });
+    });
+
+    inputGroups.forEach(inputGroup => {
+        const showHideTextBtn = inputGroup.querySelector('span.input-group-text.bi');
+        if (!showHideTextBtn) {return;}
+
+        const targetInput = inputGroup.querySelector('input');
+        showHideTextBtn.addEventListener('click', event => {
+            if (targetInput.type == 'text') {
+                targetInput.type = 'password';
+                showHideTextBtn.classList.remove('bi-eye');
+                showHideTextBtn.classList.add('bi-eye-slash');
+            } else {
+                targetInput.type = 'text';
+                showHideTextBtn.classList.remove('bi-eye-slash');
+                showHideTextBtn.classList.add('bi-eye');
+            };
+        });
+    });
+
+</script>
+</body>
+</html>

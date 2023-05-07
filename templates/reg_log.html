@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}Вход & Регистрация{% endblock %}
+{% block body %}
+<div class="container h-100 d-flex flex-column justify-content-center">
+    <div class="row">
+        <div class="col-4 p-0"></div>
+        <div class="col-4 p-0">
+
+            <form class="login-form">
+                <div class="mb-4 w-75 mx-auto text-center">
+                    <h1>Вход</h1>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="text" class="form-control my-input-1" id="login-name-input" placeholder="Имя пользователя" name="username" autocomplete="off" required>
+                    <label for="login-name-input">Имя пользователя</label>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="password" class="form-control my-input-1" id="login-pass-input" placeholder="Пароль" name="password" autocomplete="off" required>
+                    <label for="login-pass-input">Пароль</label>
+                </div>
+
+                <div class="mb-2 w-75 mx-auto">
+                    <button type="submit" class="btn my-btn-1 w-100">Войти</button>
+                </div>
+
+                <div class="w-75 mx-auto form-switcher text-end">
+                    Нет аккаунта? <span class="text-decoration-underline">Регистрация</span>
+                </div>
+            </form>
+        
+        </div>
+        <div class="col-4 p-0">
+
+            <form class="registration-form">
+                <div class="mb-4 w-75 mx-auto text-center">
+                    <h1>Регистрация</h1>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="text" class="form-control my-input-1" id="reg-username-input" placeholder="Имя пользователя" autocomplete="username" data-lpignore="true" required>
+                    <label for="reg-username-input">Имя пользователя</label>
+                </div>
+
+                <div class="form-floating mb-3 w-75 mx-auto">
+                    <input type="password" class="form-control my-input-1" id="reg-pass-input" placeholder="Пароль" autocomplete="off" required>
+                    <label for="reg-pass-input">Пароль</label>
+                </div>
+
+                <div class="mb-2 w-75 mx-auto">
+                    <button type="submit" class="btn my-btn-1 w-100">Зарегистрироваться</button>
+                </div>
+
+                <div class="w-75 mx-auto form-switcher text-end">
+                    Уже есть аккаунт? <span class="text-decoration-underline">Войти</span>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    const loginForm = document.querySelector('.login-form');
+    const registrationForm = document.querySelector('.registration-form');
+    const formSwitchers = document.querySelectorAll('.form-switcher > span');
+    const api = new Api();
+
+    function switchForm () {
+        if (registrationForm.style.opacity === '1') {
+            registrationForm.style.opacity = '0';
+            registrationForm.style.transform = 'translateX(0%)';
+            loginForm.style.opacity = '1';
+            loginForm.style.transform = 'translateX(0%)'
+        } else {
+            registrationForm.style.opacity = '1';
+            registrationForm.style.transform = 'translateX(-100%)';
+            loginForm.style.opacity = '0';
+            loginForm.style.transform = 'translateX(-100%)'
+        }
+    };
+
+    formSwitchers.forEach(formSwitcher => {
+        formSwitcher.addEventListener('click', event => switchForm());
+    });
+
+    registrationForm.addEventListener("submit", async function( event ) {
+        event.preventDefault();
+        const form = event.target
+        const username = form[0].value
+        const password = form[1].value
+
+        let response;
+
+        response = await api.register(username, password);
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+
+        response = await api.login(username, password);
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.replace('/admin');
+    });
+
+    loginForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const form = event.target
+        const username = form[0].value
+        const password = form[1].value
+
+        const response = await api.login(username, password);
+        if (!response.ok) {
+            console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
+            return;
+        }
+        window.location.replace('/admin');
+    });
+
+</script>
+{% endblock %}
