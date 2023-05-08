@@ -8,8 +8,7 @@ services:
     build: .
     container_name: app
     ports:
-      - '8000:80'
-      - '443:443'
+      - '8000:5000'
     depends_on:
       - postgres
       - redis
