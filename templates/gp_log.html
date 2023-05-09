@@ -85,7 +85,8 @@
         };
 
         if (response.redirected) {
-            window.location.replace(response.url);
+            response = await fetch(response.url , {credentials: 'include'});
+            // window.location.replace(response.url);
         }
 
         // clientCallbackUrl = (await response.json())['redirect_to'];
