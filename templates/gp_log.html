@@ -85,17 +85,8 @@
         };
 
         if (response.redirected) {
-            // response = await fetch(response.url, {credentials: 'include'});
             window.location.href = response.url;
         }
-
-        // clientCallbackUrl = (await response.json())['redirect_to'];
-        // response = await fetch(clientCallbackUrl , {credentials: 'include'});
-        // if (response.redirected) {
-        //     window.location.href = response.url;
-        // };
-        // clientPageUrl = (await response.json())['redirect_to'];
-        // window.location.href = clientPageUrl;
 
     };
 

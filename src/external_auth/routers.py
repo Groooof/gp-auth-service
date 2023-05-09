@@ -53,7 +53,6 @@ async def authenticate(request: Request,
     
     client_callback_url = f'{query.redirect_uri}?code={code}&state={query.state}'
     return RedirectResponse(url=client_callback_url, status_code=302)
-    # return {'redirect_to': f'{query.redirect_uri}?code={code}&state={query.state}'}
 
 
 @router.post('/token')
