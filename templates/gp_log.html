@@ -86,7 +86,7 @@
 
         if (response.redirected) {
             // response = await fetch(response.url, {credentials: 'include'});
-            window.location.replace(response.url);
+            window.location.href = response.url;
         }
 
         // clientCallbackUrl = (await response.json())['redirect_to'];
