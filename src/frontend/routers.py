@@ -58,8 +58,8 @@ async def get_external_auth_page(request: Request,
     received_domain = urlparse(query.redirect_uri).netloc
     stored_domain = await ext_auth_crud.App.get_domain(con, query.client_id)
     
-    # if received_domain != stored_domain:
-        # raise HTTPException(status_code=400, detail='invalid_request')
+    if received_domain != stored_domain:
+        raise HTTPException(status_code=400, detail='invalid_request')
 
     gpm = GraphicalPasswordManager(config.GRAPHICAL_PASSWORD_SIZE)
     return templates.TemplateResponse("gp_log.html",

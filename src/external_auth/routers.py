@@ -28,8 +28,8 @@ async def authenticate(request: Request,
     received_domain = urlparse(query.redirect_uri).netloc
     stored_domain = await crud.App.get_domain(con, query.client_id)
     print(request.cookies)
-    # if received_domain != stored_domain:
-        # raise HTTPException(status_code=400, detail='invalid_request')
+    if received_domain != stored_domain:
+        raise HTTPException(status_code=400, detail='invalid_request')
     
     gpm = GraphicalPasswordManager(config.GRAPHICAL_PASSWORD_SIZE)
     password = gpm.get_pass_images(body.step_2_selection,
@@ -72,8 +72,8 @@ async def get_user_data(response: Response,
     received_domain = urlparse(body.redirect_uri).netloc
     stored_domain = await crud.App.get_domain(con, body.client_id)
     
-    # if received_domain != stored_domain:
-        # raise HTTPException(status_code=400, detail='invalid_request')
+    if received_domain != stored_domain:
+        raise HTTPException(status_code=400, detail='invalid_request')
 
     stored_client_secret = await crud.App.get_client_secret(con, body.client_id) #
     if stored_client_secret != body.client_secret:
