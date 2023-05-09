@@ -110,7 +110,8 @@ class Api {
         const options = {
             method: 'POST',
             body: JSON.stringify(body),
-            headers: this.base_headers
+            headers: this.base_headers,
+            credentials: 'include'
         };
         const response = await fetch(this.api_prefix + url, options);
         return response;

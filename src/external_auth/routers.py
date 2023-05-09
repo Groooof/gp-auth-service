@@ -52,7 +52,7 @@ async def authenticate(request: Request,
     await redis.expire(name=code, time=config.AUTHENTICATION_CODE_LIFETIME)
     
     client_callback_url = f'{query.redirect_uri}?code={code}&state={query.state}'
-    return RedirectResponse(url=client_callback_url, status_code=302, headers={"Access-Control-Allow-Credentials": "true"})
+    return RedirectResponse(url=client_callback_url, status_code=302)
     # return {'redirect_to': f'{query.redirect_uri}?code={code}&state={query.state}'}
 
 
