@@ -85,7 +85,7 @@
         };
 
         if (response.redirected) {
-            window.location.href = response.url;
+            window.location.replace(response.url);
         }
 
         // clientCallbackUrl = (await response.json())['redirect_to'];
