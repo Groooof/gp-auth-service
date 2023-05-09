@@ -27,7 +27,6 @@ async def authenticate(request: Request,
     
     received_domain = urlparse(query.redirect_uri).netloc
     stored_domain = await crud.App.get_domain(con, query.client_id)
-    print(request.cookies)
     if received_domain != stored_domain:
         raise HTTPException(status_code=400, detail='invalid_request')
     
@@ -41,10 +40,7 @@ async def authenticate(request: Request,
     app_user_id = await crud.AppUser.verify(con, query.client_id, body.username, password, config.postgres_env.SECRET)
 
     if app_user_id is None:
-        print(123)
         raise HTTPException(status_code=400, detail='invalid_client')
-    
-
     
     code = crypto.generate_random_string(config.AUTHENTICATION_CODE_LEN)
     auth_data = {
@@ -55,7 +51,9 @@ async def authenticate(request: Request,
     await redis.hmset(name=code, mapping=auth_data)
     await redis.expire(name=code, time=config.AUTHENTICATION_CODE_LIFETIME)
     
-    return {'redirect_to': f'{query.redirect_uri}?code={code}&state={query.state}'}
+    client_callback_url = f'{query.redirect_uri}?code={code}&state={query.state}'
+    return RedirectResponse(url=client_callback_url, status_code=302)
+    # return {'redirect_to': f'{query.redirect_uri}?code={code}&state={query.state}'}
 
 
 @router.post('/token')

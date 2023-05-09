@@ -83,15 +83,18 @@
             console.log(`ERR: ${response.url} ${response.status} ${(await response.json()).detail}`);
             return;
         };
-        console.log('Response: ', response);
-        
-        clientCallbackUrl = (await response.json())['redirect_to'];
-        response = await fetch(clientCallbackUrl , {credentials: 'include'});
+
         if (response.redirected) {
             window.location.href = response.url;
-        };
-        clientPageUrl = (await response.json())['redirect_to'];
-        window.location.href = clientPageUrl;
+        }
+
+        // clientCallbackUrl = (await response.json())['redirect_to'];
+        // response = await fetch(clientCallbackUrl , {credentials: 'include'});
+        // if (response.redirected) {
+        //     window.location.href = response.url;
+        // };
+        // clientPageUrl = (await response.json())['redirect_to'];
+        // window.location.href = clientPageUrl;
 
     };
 
