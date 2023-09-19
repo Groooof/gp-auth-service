@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS apps (
     name TEXT NOT NULL,
     owner_id UUID NOT NULL,
     created_at TIMESTAMP DEFAULT now(),
-    FOREIGN KEY (owner_id) REFERENCES users (id)
+    FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
 );
 
 CREATE TABLE IF NOT EXISTS apps_users (

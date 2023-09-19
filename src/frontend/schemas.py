@@ -11,7 +11,7 @@ def validate_url_structure(v):
     return v
 
 
-class GetExternalAuthPage:
+class GetAppsAuthPage:
     class Request:
         class Query(pd.BaseModel):
             response_type: str

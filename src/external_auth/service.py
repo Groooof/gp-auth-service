@@ -19,19 +19,23 @@ class GraphicalPasswordManager:
         self._size = size
     
     def get_pass_images(self,
-                        step_2_selection: str,
-                        step_3_selection: str,
-                        step_1_images: tp.List[tp.List[str]],
-                        step_2_images: tp.List[tp.List[str]],
-                        step_3_images: tp.List[tp.List[str]],
+                        step_2_choice: str,
+                        step_3_choice: str,
+                        step_1_imgs: tp.List[tp.List[str]],
+                        step_2_imgs: tp.List[tp.List[str]],
+                        step_3_imgs: tp.List[tp.List[str]],
                         ) -> str:
         
-        step_3_selection_position = self._get_index_from_matrix(step_3_images, step_3_selection)
-        step_2_selection_position = self._get_index_from_matrix(step_2_images, step_2_selection)
-
-        pwd_1 = step_1_images[step_2_selection_position[0]][step_2_selection_position[1]]
-        pwd_2 = step_2_images[step_3_selection_position[0]][step_3_selection_position[1]]
-
+        step_3_choice_pos = self._find_in_matrix(step_3_imgs,
+                                                 step_3_choice)
+        step_2_choice_pos = self._find_in_matrix(step_2_imgs,
+                                                 step_2_choice)
+        
+        pwd_1 = step_1_imgs[step_2_choice_pos[0]] \
+                           [step_2_choice_pos[1]]
+        pwd_2 = step_2_imgs[step_3_choice_pos[0]] \
+                           [step_3_choice_pos[1]]
+        
         return f'{pwd_1}{pwd_2}'
     
     def get_random_matrix(self):
@@ -45,9 +49,9 @@ class GraphicalPasswordManager:
                 temp_images.remove(item)
         return matrix
 
-    def _get_index_from_matrix(self,
-                              matrix: tp.List[tp.List[tp.Any]],
-                              value: tp.Any) -> tp.Optional[tp.Tuple[int, int]]:
+    def _find_in_matrix(self,
+                        matrix: tp.List[tp.List[tp.Any]],
+                        value: tp.Any) -> tp.Optional[tp.Tuple[int, int]]:
         for i in range(len(matrix)):
             for j in range(len(matrix[i])):
                 if matrix[i][j] == value:

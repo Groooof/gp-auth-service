@@ -23,7 +23,6 @@ class App:
     
 class AppUser:
     async def create(app_user: dto.AppUser.Create, con: asyncpg.Connection) -> tp.Optional[UUID]:
-        # шифрования сюды
         query = f'''
         INSERT INTO apps_users (username, encrypted_password, app_id)
         VALUES ($1, pgp_sym_encrypt(crypt($2, gen_salt('bf', 10)), $4), $3)
